@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WinVIP88 - Ultimate Live Dice Arena</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
+        
+        body {
+            font-family: 'Orbitron', sans-serif;
+            background: radial-gradient(circle at center, #1a0b2e 0%, #0d0614 100%);
+            color: #fff;
+            overflow-x: hidden;
+        }
+
+        .glass-panel {
+            background: rgba(20, 10, 35, 0.7);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(217, 70, 239, 0.2);
+            box-shadow: 0 0 30px rgba(168, 85, 247, 0.15);
+        }
+
+        .dice-3d {
+            width: 80px;
+            height: 80px;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 1.2s cubic-bezier(0.15, 0.85, 0.35, 1.2);
+        }
+
+        .dice-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #2a1b4e, #130b24);
+            border: 2px solid #d946ef;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: inset 0 0 15px rgba(217, 70, 239, 0.3);
+        }
+
+        .dot {
+            width: 14px;
+            height: 14px;
+            background: #f43f5e;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #f43f5e;
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(217, 70, 239, 0.4); }
+            50% { box-shadow: 0 0 40px rgba(217, 70, 239, 0.8); }
+        }
+
+        .animate-glow {
+            animation: pulse-glow 2s infinite;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between p-4 md:p-6">
+
+    <!-- Header -->
+    <header class="max-w-6xl w-full mx-auto flex justify-between items-center glass-panel p-4 rounded-2xl mb-6">
+        <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 bg-gradient-to-tr from-purple-600 to-pink-500 rounded-xl flex items-center justify-center font-black text-xl shadow-lg">W</div>
+            <span class="text-2xl font-black tracking-wider bg-gradient-to-r from-pink-500 to-purple-400 bg-clip-text text-transparent">WINVIP88</span>
+        </div>
+        <div class="flex items-center space-x-4">
+            <div class="px-4 py-2 bg-black/40 border border-purple-500/30 rounded-xl text-sm font-semibold">
+                Số dư: <span id="balance" class="text-emerald-400 font-bold">10,000,000</span> VNĐ
+            </div>
+            <button onclick="openModal()" class="px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 rounded-xl font-bold transition shadow-lg text-sm">Rút Tiền</button>
+        </div>
+    </header>
+
+    <!-- Main Game Arena -->
+    <main class="max-w-6xl w-full mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6 flex-grow items-center">
+        
+        <!-- Left Stats / History -->
+        <div class="glass-panel p-6 rounded-2xl flex flex-col h-[450px]">
+            <h3 class="text-lg font-bold text-purple-300 mb-4 border-b border-purple-500/20 pb-2">Lịch Sử Phiên</h3>
+            <div id="history-list" class="space-y-3 overflow-y-auto flex-grow pr-2 custom-scrollbar">
+                <div class="flex justify-between items-center p-3 bg-white/5 rounded-xl text-sm">
+                    <span class="text-purple-400">#88421</span>
+                    <span class="font-bold text-emerald-400">Tài (14)</span>
+                </div>
+                <div class="flex justify-between items-center p-3 bg-white/5 rounded-xl text-sm">
+                    <span class="text-purple-400">#88420</span>
+                    <span class="font-bold text-rose-400">Xỉu (9)</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Center Arena & Dice Rolling -->
+        <div class="glass-panel p-6 rounded-2xl flex flex-col items-center justify-center h-[450px] relative overflow-hidden animate-glow">
+            <div class="absolute top-4 text-xs tracking-widest text-purple-400 uppercase">Thời gian cược còn lại</div>
+            <div id="countdown" class="text-4xl font-black text-pink-500 mb-8">15s</div>
+
+            <!-- Dice Container -->
+            <div class="flex space-x-6 mb-10">
+                <div class="dice-3d" id="dice1">
+                    <div class="dice-face" style="transform: rotateY(0deg) translateZ(40px);"><div class="dot"></div></div>
+                    <div class="dice-face" style="transform: rotateY(90deg) translateZ(40px);"></div>
+                    <div class="dice-face" style="transform: rotateY(180deg) translateZ(40px);"></div>
+                    <div class="dice-face" style="transform: rotateY(-90deg) translateZ(40px);"></div>
+                    <div class="dice-face" style="transform: rotateX(90deg) translateZ(40px);"></div>
+                    <div class="dice-face" style="transform: rotateX(-90deg) translateZ(40px);"></div>
+                </div>
+                <div class="dice-3d" id="dice2">
+                    <div class="dice-face" style="transform: rotateY(0deg) translateZ(40px);"><div class="dot"></div></div>
+                </div>
+                <div class="dice-3d" id="dice3">
+                    <div class="dice-face" style="transform: rotateY(0deg) translateZ(40px);"><div class="dot"></div></div>
+                </div>
+            </div>
+
+            <div id="result-display" class="text-2xl font-black text-purple-200 tracking-wider">HỆ THỐNG SẴN SÀNG</div>
+        </div>
+
+        <!-- Right Betting Panel -->
+        <div class="glass-panel p-6 rounded-2xl flex flex-col justify-between h-[450px]">
+            <div>
+                <h3 class="text-lg font-bold text-purple-300 mb-4 border-b border-purple-500/20 pb-2">Đặt Cược Nhanh</h3>
+                <div class="mb-4">
+                    <label class="text-xs text-purple-400 mb-1 block">Mức cược (VNĐ)</label>
+                    <input type="number" id="bet-amount" value="100000" class="w-full bg-black/50 border border-purple-500/30 rounded-xl px-4 py-3 text-white font-bold focus:outline-none focus:border-pink-500 transition">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <button onclick="placeBet('tai')" class="py-5 bg-gradient-to-tr from-rose-600 to-red-500 hover:from-rose-500 hover:to-red-400 rounded-2xl font-black text-xl shadow-lg transition transform active:scale-95">TÀI</button>
+                <button onclick="placeBet('xiu')" class="py-5 bg-gradient-to-tr from-cyan-600 to-blue-500 hover:from-cyan-500 hover:to-blue-400 rounded-2xl font-black text-xl shadow-lg transition transform active:scale-95">XỈU</button>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Withdrawal Modal Mockup -->
+    <div id="withdrawal-modal" class="fixed inset-0 bg-black/80 backdrop-blur-md hidden items-center justify-center p-4">
+        <div class="glass-panel max-w-md w-full p-6 rounded-3xl relative">
+            <h2 class="text-2xl font-black mb-4 bg-gradient-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent">Cổng Rút Tiền / Thẻ Cào</h2>
+            <div class="space-y-4 mb-6">
+                <div>
+                    <label class="text-xs text-purple-400 mb-1 block">Phương thức</label>
+                    <select class="w-full bg-black/50 border border-purple-500/30 rounded-xl px-4 py-3 text-white font-bold focus:outline-none">
+                        <option>Ngân hàng trực tuyến (Vietcombank, MB, Techcombank...)</option>
+                        <option>Thẻ cào điện thoại (Viettel, Vinaphone, Mobifone)</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="text-xs text-purple-400 mb-1 block">Số tài khoản / Số thẻ</label>
+                    <input type="text" placeholder="Nhập thông tin nhận tiền..." class="w-full bg-black/50 border border-purple-500/30 rounded-xl px-4 py-3 text-white font-bold focus:outline-none">
+                </div>
+            </div>
+            <div class="flex space-x-4">
+                <button onclick="closeModal()" class="flex-1 py-3 bg-white/10 hover:bg-white/20 rounded-xl font-bold transition">Hủy</button>
+                <button onclick="processWithdraw()" class="flex-1 py-3 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 rounded-xl font-bold transition shadow-lg">Xác Nhận Rút</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script Engine -->
+    <script>
+        let balance = 10000000;
+        let currentBet = null;
+
+        function updateBalance() {
+            document.getElementById('balance').innerText = balance.toLocaleString('en-US');
+        }
+
+        function openModal() {
+            document.getElementById('withdrawal-modal').classList.remove('hidden');
+            document.getElementById('withdrawal-modal').classList.add('flex');
+        }
+
+        function closeModal() {
+            document.getElementById('withdrawal-modal').classList.add('hidden');
+            document.getElementById('withdrawal-modal').classList.remove('flex');
+        }
+
+        function processWithdraw() {
+            alert("Yêu cầu rút tiền/thẻ cào đã được ghi nhận vào hàng đợi xử lý tự động.");
+            closeModal();
+        }
+
+        function placeBet(type) {
+            let amount = parseInt(document.getElementById('bet-amount').value);
+            if (amount > balance) {
+                alert("Số dư không đủ để thực hiện giao dịch này!");
+                return;
+            }
+            balance -= amount;
+            updateBalance();
+            currentBet = type;
+            document.getElementById('result-display').innerText = `Đã cược ${amount.toLocaleString()} VNĐ vào ${type.toUpperCase()}`;
+        }
+
+        // Countdown & Dice Simulation Loop
+        let timeLeft = 15;
+        setInterval(() => {
+            timeLeft--;
+            if (timeLeft <= 0) {
+                timeLeft = 15;
+                triggerRollAnimation();
+            }
+            document.getElementById('countdown').innerText = timeLeft + 's';
+        }, 1000);
+
+        function triggerRollAnimation() {
+            const d1 = document.getElementById('dice1');
+            const d2 = document.getElementById('dice2');
+            const d3 = document.getElementById('dice3');
+
+            d1.style.transform = `rotateX(${Math.random() * 720}deg) rotateY(${Math.random() * 720}deg)`;
+            d2.style.transform = `rotateX(${Math.random() * 720}deg) rotateY(${Math.random() * 720}deg)`;
+            d3.style.transform = `rotateX(${Math.random() * 720}deg) rotateY(${Math.random() * 720}deg)`;
+
+            setTimeout(() => {
+                let v1 = Math.floor(Math.random() * 6) + 1;
+                let v2 = Math.floor(Math.random() * 6) + 1;
+                let v3 = Math.floor(Math.random() * 6) + 1;
+                let total = v1 + v2 + v3;
+                let outcome = total > 10 ? 'Tài' : 'Xỉu';
+                document.getElementById('result-display').innerText = `Kết quả: ${v1} - ${v2} - ${v3} (${total} Điểm -> ${outcome})`;
+            }, 1200);
+        }
+    </script>
+</body>
+</html>
